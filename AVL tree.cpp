@@ -75,7 +75,7 @@ node* insertNode(node* root,int data)
         {
             root=RRotate(root);
         }
-        if(root->left->data<data)
+        else
         {
             root->left=LRotate(root->left);
             root=RRotate(root);
@@ -87,12 +87,19 @@ node* insertNode(node* root,int data)
         {
             root=LRotate(root);
         }
-        if(root->right->data>data)
+        else
         {
             root->right=RRotate(root->right);
             root=LRotate(root);
         }
     }
+    return root;
+}
+node* NextGreatest(node* root)
+{
+    root=root->right;
+    while(root->left)
+        root=root->left;
     return root;
 }
 void preOrder(node *root)  
@@ -104,15 +111,72 @@ void preOrder(node *root)
         preOrder(root->right);  
     }  
 } 
+node* deleteNode(node* root,int value)
+{
+    if(root->data>value)
+        root->left=deleteNode(root->left,value);
+    if(root->data<value)
+        root->right=deleteNode(root->right,value);
+    if(root->data==value)
+    {
+        if(root->left==nullptr || root->right==nullptr)
+        {
+            node* temp=root->left?root->left:root->right;
+            if(temp==nullptr)
+            {
+                delete(root);
+                return nullptr;
+            }
+            *root=*temp;
+            delete temp;            
+        }
+        else
+        {
+            node* temp=NextGreatest(root);
+            root->data=temp->data;
+            root->right=deleteNode(root->right,temp->data);
+        }
+    }
+    int LHeight=getHeight(root->left);
+    int RHeight=getHeight(root->right);
+    root->height=1+max(LHeight,RHeight);
+    int Hdiff=LHeight-RHeight;
+    if(Hdiff>1)
+    {
+        if(getHeight(root->left->left)>getHeight(root->left->right))
+           root=RRotate(root);
+        else
+        {
+            root->left=LRotate(root->left);
+            root=RRotate(root);  
+        }
+    }
+    if(Hdiff<-1)
+    {
+        if(getHeight(root->right->left)<getHeight(root->left->right))
+            root=LRotate(root);
+        else
+        {
+            root->right=RRotate(root->right);
+            root=LRotate(root);
+        }
+    }
+    return root; 
+}
+
 int main()
 {
     node* root=nullptr;
-    root=insertNode(root,10);
-    root=insertNode(root,20);
-    root=insertNode(root,30);
-    root=insertNode(root,40);
-    root=insertNode(root,50);
-    root=insertNode(root,25);
+    root = insertNode(root,10);
+    root = insertNode(root,20);
+    root = insertNode(root,30);
+    root = insertNode(root,40);
+    root = insertNode(root,50);
+    root = insertNode(root,25);
+    root = insertNode(root,15);
     preOrder(root); 
-    
+    root = deleteNode(root, 40);
+    cout << "\nPreorder traversal after"
+         << " deletion of 40 \n";  
+    preOrder(root);  
 }
