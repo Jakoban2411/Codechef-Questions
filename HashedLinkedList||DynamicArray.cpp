@@ -16,7 +16,7 @@ Node<T>* NewNode(T data)
     return _newNode;
 }
 template<typename T>
-struct HashedLinkList
+struct HashedLinkList               //consider making this a class
 {
     int _maxsize=1;
     int _currsize=0;
