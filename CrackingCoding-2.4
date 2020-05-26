@@ -1,0 +1,98 @@
+#include<iostream>
+using namespace std;
+struct Node
+{
+    int data;
+    Node* next;
+    Node(int val)
+    {
+        data=val;
+        next=nullptr;
+    }
+};
+Node* partition(Node* Head,Node* Tail,int x)
+{
+    Node* HighStart=nullptr;
+    Node* HighEnd=nullptr;
+    Node* LowStart=nullptr;
+    Node* LowEnd=nullptr;
+    Node* temp=Head;
+    Node* LowConnector=nullptr;
+    Node* HighConnector=nullptr;
+    while(temp!=nullptr)
+    {
+        if(temp->data<x)
+        {
+            if(LowStart==nullptr)
+                LowStart=temp;
+            LowEnd=temp;
+            if(temp->next==nullptr || temp->next->data>=x)
+            {
+                if(LowConnector==nullptr)
+                    LowConnector=temp;
+                if(LowConnector!=temp)
+                {
+                    Node* nextToLow=LowConnector->next;
+                    LowConnector->next=HighConnector->next;
+                    HighConnector->next=temp->next;
+                    temp->next=nextToLow;
+                }
+                else
+                {
+                    if(HighConnector)
+                    {
+                        HighConnector->next=temp->next;
+                        temp->next=HighStart;
+                    }
+                }
+                if(HighEnd)
+                    temp=HighEnd;
+            }
+        }
+        if(temp->data>=x)
+        {
+            if(HighStart==nullptr)
+                HighStart=temp;
+            HighEnd=temp;
+            if(temp->next && temp->next->data<x)
+                HighConnector=temp;
+        }
+        temp=temp->next;
+    }
+    return LowStart;
+}
+int main()
+{
+    char ch='y';
+    int value;
+    cout<<"Enter Partition value: ";
+    cin>>value;
+    int data;
+    cin>>data;
+    Node* Head=new Node(data);
+    cout<<"\n MORE! ";
+    Node* Tail=Head;
+    Node* temp;
+    while(ch=='y')
+    {
+        cin>>data;
+        temp=new Node(data);
+        Tail->next=temp;
+        Tail=temp;
+        cout<<"\n MoRe? ";
+        cin>>ch;
+    }
+    temp=Head;
+    while(temp!=nullptr)
+    {
+        cout<<temp->data<<" ";
+        temp=temp->next;
+    }
+    Head=partition(Head,Tail,value);
+    temp=Head;
+    while(temp!=nullptr)
+    {
+        cout<<temp->data<<" ";
+        temp=temp->next;
+    }
+}
