@@ -1,0 +1,18 @@
+#include<iostream>
+#define max(a,b) (a>b?a:b)
+using namespace std;
+int isBalanced(node* start)
+{
+    if(start==nullptr )
+        return true;
+    int r_height=1+isBalanced(start->right);
+    if(r_height<0)  return -10;
+    int l_height=1+isBalanced(start->left);
+    if(l_height<0)  return -10;
+    if(r_height-l_height>1)
+        return -10;
+    else
+        return max(r_height,l_height);
+    
+    
+}
