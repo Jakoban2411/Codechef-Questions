@@ -132,7 +132,7 @@ string EvalExp(int* num,int start,int size,int divisor,string Expression="")
 
 int main()
 {
-    int Numbers[]={1,2,3,3};
+    int Numbers[]={1,2,3,3};            //Add a hashmap for faster execution
     int n=11;
     string Exp=EvalExp(Numbers,0,4,n);
     cout<<Exp;
